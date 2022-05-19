@@ -1,0 +1,174 @@
+{
+    "frames": {
+        "player1": {
+            "frame": {
+                "x": 1,
+                "y": 0,
+                "w": 48,
+                "h": 118
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 48,
+                "h": 118
+            },
+            "sourceSize": {
+                "w": 48,
+                "h": 118
+            }
+        },
+        "player4": {
+            "frame": {
+                "x": 153,
+                "y": 0,
+                "w": 46,
+                "h": 118
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 46,
+                "h": 118
+            },
+            "sourceSize": {
+                "w": 46,
+                "h": 118
+            }
+        },
+        "player5": {
+            "frame": {
+                "x": 201,
+                "y": 0,
+                "w": 48,
+                "h": 118
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 48,
+                "h": 118
+            },
+            "sourceSize": {
+                "w": 48,
+                "h": 118
+            }
+        },
+        "player8": {
+            "frame": {
+                "x": 351,
+                "y": 0,
+                "w": 48,
+                "h": 118
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 48,
+                "h": 118
+            },
+            "sourceSize": {
+                "w": 48,
+                "h": 118
+            }
+        },
+        "player3": {
+            "frame": {
+                "x": 103,
+                "y": 6,
+                "w": 42,
+                "h": 112
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 42,
+                "h": 112
+            },
+            "sourceSize": {
+                "w": 42,
+                "h": 112
+            }
+        },
+        "player7": {
+            "frame": {
+                "x": 303,
+                "y": 6,
+                "w": 42,
+                "h": 112
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 42,
+                "h": 112
+            },
+            "sourceSize": {
+                "w": 42,
+                "h": 112
+            }
+        },
+        "player2": {
+            "frame": {
+                "x": 51,
+                "y": 10,
+                "w": 48,
+                "h": 108
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 48,
+                "h": 108
+            },
+            "sourceSize": {
+                "w": 48,
+                "h": 108
+            }
+        },
+        "player6": {
+            "frame": {
+                "x": 251,
+                "y": 10,
+                "w": 48,
+                "h": 108
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize": {
+                "x": 0,
+                "y": 0,
+                "w": 48,
+                "h": 108
+            },
+            "sourceSize": {
+                "w": 48,
+                "h": 108
+            }
+        }
+    },
+    "meta": {
+        "app": "https://www.leshylabs.com/apps/sstool/",
+        "version": "Leshy SpriteSheet Tool v0.8.4",
+        "image": "spritesheet.png",
+        "size": {
+            "w": 400,
+            "h": 120
+        },
+        "scale": 1
+    }
+}
