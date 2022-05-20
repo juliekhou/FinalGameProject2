@@ -269,9 +269,17 @@ class Play extends Phaser.Scene{
             
         }, this);
 
-        // if(Phaser.Geom.Triangle.Contains(this.triangle, this.player.x, this.player.y)){
-        //     this.player.x = 10;
-        // }
+        if(Phaser.Geom.Triangle.Contains(this.triangle, this.player.x, this.player.y)){
+            this.player.x = 10;
+        }
+        if(this.player.y < 10){
+            this.player.y = game.config.height - 10;
+        }
+        if(this.player.y > game.config.height - 9){
+            console.log("reach");
+            this.player.y = 10;
+        }
+        console.log(this.player.y);
 
         // make all characters wrap when they hit the edge of the screen
         // this.physics.world.wrap(this.player, 0);
