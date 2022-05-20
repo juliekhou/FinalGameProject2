@@ -55,9 +55,9 @@ class Play extends Phaser.Scene{
 
         // make player avatar 🧍
         if(hiderIsHuman){
-            this.player = this.physics.add.sprite(hiderX, hiderY, 'npc_atlas').setScale(this.AVATAR_SCALE).setOrigin(0, 0).setInteractive();
+            this.player = this.physics.add.sprite(hiderX, hiderY, 'humanPlayer').setScale(this.AVATAR_SCALE).setOrigin(0, 0).setInteractive();
         } else {
-            this.player = this.physics.add.sprite(hiderX, hiderY, 'monsterNPC').setScale(this.MONSTER_SCALE).setOrigin(0, 0).setInteractive();
+            this.player = this.physics.add.sprite(hiderX, hiderY, 'monsterPlayer').setScale(this.MONSTER_SCALE).setOrigin(0, 0).setInteractive();
         }
         
         // add hider interactibility 
@@ -104,6 +104,20 @@ class Play extends Phaser.Scene{
             frameRate: 10
         });
 
+        // human walk
+        this.anims.create({
+            key: 'humanWalk',
+            frames: this.anims.generateFrameNumbers('humanPlayer', { start: 0, end: 7, first: 0}),
+            frameRate: 10
+        });
+
+        // monster walk
+        this.anims.create({
+            key: 'monsterWalk',
+            frames: this.anims.generateFrameNumbers('monsterPlayer', { start: 0, end: 7, first: 0}),
+            frameRate: 10
+        });
+
         // adding collisions 
         this.physics.add.collider(this.npcHumanGroup, this.player, (npc)=> {this.collide(npc)});
         this.physics.add.collider(this.npcHumanGroup);
@@ -146,12 +160,34 @@ class Play extends Phaser.Scene{
         this.obstacleLight2 = this.lights.addLight(920, 500, 120);
         this.obstacleLight2.visible = false;
 
-
         // point light that follows cursor
-        light = this.lights.addLight(0, 0, 200);
-        this.input.on('pointermove', function (pointer) {
+        this.lightRadius = 200;
+        this.lightColor = 0xffffff;
+        light = this.lights.addLight(0, 0, this.lightRadius, this.lightColor);
+        this.input.on('pointermove', (pointer)=> {
             light.x = pointer.x;
             light.y = pointer.y;
+            console.log("Distance: ",Phaser.Math.Distance.Between(light.x, light.y, this.player.x, this.player.y));
+            console.log("player: ",this.player.x, ",", this.player.y );
+            console.log("pointer: ", light.x, ",", light.y);
+
+            // Change to red
+            if(Phaser.Math.Distance.Between(light.x, light.y, this.player.x, this.player.y) < 100){
+                this.lights.removeLight(light);
+                this.lightColor = 0xFFFFFF; // 0xEEA764
+                light = this.lights.addLight(pointer.x, pointer.y, this.lightRadius, this.lightColor);
+            // Change to yellow
+            } else if(Phaser.Math.Distance.Between(light.x, light.y, this.player.x, this.player.y) < 250){
+                this.lights.removeLight(light);
+                this.lightColor = 0xF0DD82; //0xF0DD82
+                light = this.lights.addLight(pointer.x, pointer.y, this.lightRadius, this.lightColor);
+            // Change back to white
+            } else{
+                this.lights.removeLight(light);
+                this.lightColor = 0xEEA764;
+                light = this.lights.addLight(pointer.x, pointer.y, this.lightRadius, this.lightColor);
+
+            }
         });
     }
 
@@ -245,39 +281,39 @@ class Play extends Phaser.Scene{
             this.player.body.setVelocityX(-this.VELOCITY);
             this.player.flipX = true;
             if(hiderIsHuman){
-                this.player.anims.play('walk', true);
+                this.player.anims.play('humanWalk', true);
             } else {
-                this.player.anims.play('idle', true);
+                this.player.anims.play('monsterWalk', true);
             }
         } else if(cursors.right.isDown) {
             this.player.body.setVelocityX(this.VELOCITY);
             this.player.flipX = false;
             if(hiderIsHuman){
-                this.player.anims.play('walk', true);
+                this.player.anims.play('humanWalk', true);
             } else {
-                this.player.anims.play('idle', true);
+                this.player.anims.play('monsterWalk', true);
             }
         } else if(cursors.up.isDown) {
             this.player.body.setVelocityY(-this.VELOCITY);
             if(hiderIsHuman){
-                this.player.anims.play('walk', true);
+                this.player.anims.play('humanWalk', true);
             } else {
-                this.player.anims.play('idle', true);
+                this.player.anims.play('monsterWalk', true);
             }    
         } else if(cursors.down.isDown) {
             this.player.body.setVelocityY(this.VELOCITY);
             if(hiderIsHuman){
-                this.player.anims.play('walk', true);
+                this.player.anims.play('humanWalk', true);
             } else {
-                this.player.anims.play('idle', true);
+                this.player.anims.play('monsterWalk', true);
             }
         } else if (!cursors.right.isDown && !cursors.left.isDown && !cursors.up.isDown && !cursors.down.isDown) {
             this.player.body.setVelocityX(0);
             this.player.body.setVelocityY(0);
             if(hiderIsHuman){
-                this.player.anims.play('walk', false);
+                this.player.anims.play('humanWalk', false);
             } else {
-                this.player.anims.play('idle', false);
+                this.player.anims.play('monsterWalk', false);
             }
         }
 
@@ -334,6 +370,7 @@ class Play extends Phaser.Scene{
         // this.physics.world.wrap(this.npcHumanGroup, 0);
         // this.physics.world.wrap(this.npcMonsterGroup, 0);
         this.player.body.collideWorldBounds = true;
+
         
     }
 
@@ -371,6 +408,9 @@ class Play extends Phaser.Scene{
         }
         // before playing sound, check if the pointer is on the hider
         if(!(this.player.getBounds().contains(pointer.x, pointer.y))){
+            this.lights.removeLight(light);
+            this.lightRadius -= 7;
+            light = this.lights.addLight(pointer.x, pointer.y, this.lightRadius, this.lightColor);
             this.missSound1.play(missSoundConfig);
         }
     }
