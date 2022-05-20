@@ -4,7 +4,7 @@ class Play extends Phaser.Scene{
     }
 
     preload(){
-         
+        
     }
 
     create(){
@@ -29,6 +29,16 @@ class Play extends Phaser.Scene{
 
         // from https://phaser.io/examples/v3/view/actions/place-on-triangle
         this.triangle = new Phaser.Geom.Triangle.BuildRight(1300, -10, -490, -610);
+
+        // background obstacles 
+        this.obstacle1 = this.physics.add.sprite(-30, 100, 'vampire').setScale(0.6).setOrigin(0, 0).setInteractive();
+        this.obstacle1.flipX = true;
+        this.obstacle1.setImmovable(true);
+        this.obstacle1.setPipeline('Light2D');
+
+        this.obstacle2 = this.physics.add.sprite(800, 400, 'dots').setScale(0.5).setOrigin(0, 0).setInteractive();
+        this.obstacle2.setImmovable(true);
+        this.obstacle2.setPipeline('Light2D');
 
         // variable for hider winning state (time runs out)
         hiderWin = false;
@@ -66,12 +76,12 @@ class Play extends Phaser.Scene{
         this.npcMonsterGroup = this.add.group({});
 
         // adding human NPCs
-        for(let x = 0; x < 40; x++){
+        for(let x = 0; x < 35; x++){
             this.addNPC("npc_atlas", "player1", true, this.AVATAR_SCALE);
         }
         
         // adding monster NPCs
-        for(let y = 0; y < 40; y++){
+        for(let y = 0; y < 35; y++){
             this.addNPC('monsterNPC', 0, false, this.MONSTER_SCALE);
         }
         
@@ -100,6 +110,12 @@ class Play extends Phaser.Scene{
         this.physics.add.collider(this.npcMonsterGroup, this.player, (npc)=> {this.collide(npc)});
         this.physics.add.collider(this.npcMonsterGroup);
         this.physics.add.collider(this.npcHumanGroup, this.npcMonsterGroup);
+        this.physics.add.collider(this.obstacle1, this.npcHumanGroup);
+        this.physics.add.collider(this.obstacle1, this.npcMonsterGroup);
+        this.physics.add.collider(this.obstacle2, this.npcHumanGroup);
+        this.physics.add.collider(this.obstacle2, this.npcMonsterGroup);
+        this.physics.add.collider(this.obstacle1, this.player, ()=> {this.collideObstacle(1)});
+        this.physics.add.collider(this.obstacle2, this.player, ()=> {this.collideObstacle(2)});
 
         // display clock
         let clockConfig = {
@@ -123,6 +139,13 @@ class Play extends Phaser.Scene{
         // lighting
         // ambient lighting
         this.lights.enable().setAmbientColor(0x161616);
+        // this.lights.enable().setAmbientColor(0xFFFFFF);
+
+        this.obstacleLight1 = this.lights.addLight(120, 250, 200);;
+        this.obstacleLight1.visible = false;
+        this.obstacleLight2 = this.lights.addLight(920, 500, 120);
+        this.obstacleLight2.visible = false;
+
 
         // point light that follows cursor
         light = this.lights.addLight(0, 0, 200);
@@ -138,11 +161,25 @@ class Play extends Phaser.Scene{
         let xPosition = Math.ceil(Math.random() * 1270);
         let yPosition = Math.ceil(Math.random() * 710);
 
-        while(Phaser.Geom.Triangle.Contains(this.triangle, xPosition, yPosition)){
+        let spawnCheck;
+        if(this.obstacle1.getBounds().contains(xPosition, yPosition) || this.obstacle2.getBounds().contains(xPosition, yPosition)
+                || Phaser.Geom.Triangle.Contains(this.triangle, xPosition, yPosition)){
+            spawnCheck = true;
+        } else {
+            spawnCheck = false;
+        }
+        while(spawnCheck){
             xPosition = Math.ceil(Math.random() * 1270);
             yPosition = Math.ceil(Math.random() * 710);
+            if(this.obstacle1.getBounds().contains(xPosition, yPosition) || this.obstacle2.getBounds().contains(xPosition, yPosition)
+                    || Phaser.Geom.Triangle.Contains(this.triangle, xPosition, yPosition)){
+                spawnCheck = true;
+            } else {
+                spawnCheck = false;
+            }
         }
 
+        
         // initialize NPC with lighting
         let npc = new NPC(this, xPosition, yPosition, texture, frame, isHuman, scale).setScale(scale);
         // add lighting to NPC
@@ -168,6 +205,16 @@ class Play extends Phaser.Scene{
         let xVelocity = (Math.ceil(Math.random() * 300) + 0) * (Math.round(Math.random()) ? 1 : -1);
         let yVelocity = (Math.ceil(Math.random() * 225) + 75) * (Math.round(Math.random()) ? 1 : -1);
         npc.setVelocity(xVelocity, yVelocity).setBounce(1,1);
+    }
+
+    collideObstacle(obstacle){
+        if(obstacle == 1){
+            this.obstacleLight1.visible = true;
+            let timer = this.time.delayedCall(2000, () => {this.obstacleLight1.visible = false}, null, this);
+        } else {
+            this.obstacleLight2.visible = true;
+            let timer = this.time.delayedCall(2000, () => {this.obstacleLight2.visible = false}, null, this);
+        }
     }
 
     update(){
@@ -278,7 +325,6 @@ class Play extends Phaser.Scene{
                 this.player.y = game.config.height - 10;
             }
             if(this.player.y > game.config.height - 9){
-                console.log("reach");
                 this.player.y = 10;
             }
         }
