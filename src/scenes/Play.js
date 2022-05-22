@@ -187,6 +187,8 @@ class Play extends Phaser.Scene{
                 }
             }
         });
+
+        this.played = false;
     }
 
     // function for adding NPC with randomized velocity and start position
@@ -258,20 +260,36 @@ class Play extends Phaser.Scene{
         } else {
             // set hider win to true
             hiderWin = true;
-            // load miss sound1
-            this.missSound1 = this.sound.add('missSound1');
-            let missSoundConfig = {
-                mute: false,
-                volume: 0.25,
-                rate: 1,
-                detune: 0,
-                seek: 0,
-                loop: false,
-                delay: 0
-            }
+
             this.backgroundChatter.stop();
-            this.missSound1.play(missSoundConfig);
-            this.scene.start('GameOver');
+            if(!this.played){
+                // load miss sound1
+                this.missSound1 = this.sound.add('missSound1');
+                let missSoundConfig = {
+                    mute: false,
+                    volume: 0.25,
+                    rate: 1,
+                    detune: 0,
+                    seek: 0,
+                    loop: false,
+                    delay: 0
+                }
+                this.missSound1.play(missSoundConfig);
+                this.played = true;
+            }
+        
+            this.npcHumanGroup.getChildren().forEach(function(npc){
+                npc.setVelocity(0,0);
+            }, this);
+    
+            this.npcMonsterGroup.getChildren().forEach(function(npc){
+                npc.setVelocity(0,0);
+            }, this);
+
+            light.x = this.player.x;
+            light.y = this.player.y;
+
+            let timer = this.time.delayedCall(5000, () => {this.scene.start('GameOver')}, null, this);
         }
 
         // check keyboard input
