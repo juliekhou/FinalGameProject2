@@ -163,7 +163,7 @@ class Play extends Phaser.Scene{
         // point light that follows cursor
         this.lightRadius = 200;
         this.lightColor = 0xffffff;
-        light = this.lights.addLight(0, 0, this.lightRadius, this.lightColor);
+        light = this.lights.addLight(game.config.width/2, game.config.height/2, this.lightRadius, this.lightColor);
         this.input.on('pointermove', (pointer)=> {
             if(!seekerWin && !hiderWin){
                 light.x = pointer.x;
