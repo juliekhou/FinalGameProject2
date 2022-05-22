@@ -119,17 +119,17 @@ class Play extends Phaser.Scene{
         });
 
         // adding collisions 
-        this.physics.add.collider(this.npcHumanGroup, this.player, (npc)=> {this.collide(npc)});
-        this.physics.add.collider(this.npcHumanGroup);
-        this.physics.add.collider(this.npcMonsterGroup, this.player, (npc)=> {this.collide(npc)});
-        this.physics.add.collider(this.npcMonsterGroup);
-        this.physics.add.collider(this.npcHumanGroup, this.npcMonsterGroup);
-        this.physics.add.collider(this.obstacle1, this.npcHumanGroup);
-        this.physics.add.collider(this.obstacle1, this.npcMonsterGroup);
-        this.physics.add.collider(this.obstacle2, this.npcHumanGroup);
-        this.physics.add.collider(this.obstacle2, this.npcMonsterGroup);
-        this.physics.add.collider(this.obstacle1, this.player, ()=> {this.collideObstacle(1)});
-        this.physics.add.collider(this.obstacle2, this.player, ()=> {this.collideObstacle(2)});
+        this.humanPlayerCollider = this.physics.add.collider(this.npcHumanGroup, this.player, (npc)=> {this.collide(npc)});
+        this.humanCollider = this.physics.add.collider(this.npcHumanGroup);
+        this.monsterPlayerCollider = this.physics.add.collider(this.npcMonsterGroup, this.player, (npc)=> {this.collide(npc)});
+        this.monsterCollider = this.physics.add.collider(this.npcMonsterGroup);
+        this.humanMonsterCollider = this.physics.add.collider(this.npcHumanGroup, this.npcMonsterGroup);
+        this.obstacle1HumanCollider = this.physics.add.collider(this.obstacle1, this.npcHumanGroup);
+        this.obstacle1MonsterCollider = this.physics.add.collider(this.obstacle1, this.npcMonsterGroup);
+        this.obstacle2HumanCollider = this.physics.add.collider(this.obstacle2, this.npcHumanGroup);
+        this.obstacle2MonsterCollider = this.physics.add.collider(this.obstacle2, this.npcMonsterGroup);
+        this.obstacle1PlayerCollider = this.physics.add.collider(this.obstacle1, this.player, ()=> {this.collideObstacle(1)});
+        this.obstacle2PlayerCollider = this.physics.add.collider(this.obstacle2, this.player, ()=> {this.collideObstacle(2)});
 
         // display clock
         let clockConfig = {
@@ -165,28 +165,26 @@ class Play extends Phaser.Scene{
         this.lightColor = 0xffffff;
         light = this.lights.addLight(0, 0, this.lightRadius, this.lightColor);
         this.input.on('pointermove', (pointer)=> {
-            light.x = pointer.x;
-            light.y = pointer.y;
-            console.log("Distance: ",Phaser.Math.Distance.Between(light.x, light.y, this.player.x, this.player.y));
-            console.log("player: ",this.player.x, ",", this.player.y );
-            console.log("pointer: ", light.x, ",", light.y);
-
-            // Change to red
-            if(Phaser.Math.Distance.Between(light.x, light.y, this.player.x, this.player.y) < 100){
-                this.lights.removeLight(light);
-                this.lightColor = 0xFFFFFF; // 0xEEA764
-                light = this.lights.addLight(pointer.x, pointer.y, this.lightRadius, this.lightColor);
-            // Change to yellow
-            } else if(Phaser.Math.Distance.Between(light.x, light.y, this.player.x, this.player.y) < 250){
-                this.lights.removeLight(light);
-                this.lightColor = 0xF0DD82; //0xF0DD82
-                light = this.lights.addLight(pointer.x, pointer.y, this.lightRadius, this.lightColor);
-            // Change back to white
-            } else{
-                this.lights.removeLight(light);
-                this.lightColor = 0xEEA764;
-                light = this.lights.addLight(pointer.x, pointer.y, this.lightRadius, this.lightColor);
-
+            if(!seekerWin && !hiderWin){
+                light.x = pointer.x;
+                light.y = pointer.y;
+    
+                // Change to red
+                if(Phaser.Math.Distance.Between(light.x, light.y, this.player.x, this.player.y) < 100){
+                    this.lights.removeLight(light);
+                    this.lightColor = 0xFFFFFF; // 0xEEA764
+                    light = this.lights.addLight(pointer.x, pointer.y, this.lightRadius, this.lightColor);
+                // Change to yellow
+                } else if(Phaser.Math.Distance.Between(light.x, light.y, this.player.x, this.player.y) < 250){
+                    this.lights.removeLight(light);
+                    this.lightColor = 0xF0DD82; //0xF0DD82
+                    light = this.lights.addLight(pointer.x, pointer.y, this.lightRadius, this.lightColor);
+                // Change back to white
+                } else{
+                    this.lights.removeLight(light);
+                    this.lightColor = 0xEEA764;
+                    light = this.lights.addLight(pointer.x, pointer.y, this.lightRadius, this.lightColor);
+                }
             }
         });
     }
@@ -319,37 +317,33 @@ class Play extends Phaser.Scene{
 
         // iterate through NPCs and check their direction and play animation
         this.npcHumanGroup.getChildren().forEach(function(npc){
-            if(npc.body.velocity.x < 0) {
-                npc.flipX = true;
-            } else {
-                npc.flipX = false;
+            if(!seekerWin && !hiderWin){
+                if(npc.body.velocity.x < 0) {
+                    npc.flipX = true;
+                } else {
+                    npc.flipX = false;
+                }
+                npc.anims.play('walk', true);
+                npc.body.collideWorldBounds = true;
+                if(Phaser.Geom.Triangle.Contains(this.triangle, npc.x, npc.y)){
+                    npc.destroy();
+                }
             }
-            npc.anims.play('walk', true);
-            npc.body.collideWorldBounds = true;
-            if(Phaser.Geom.Triangle.Contains(this.triangle, npc.x, npc.y)){
-                // npc.setVelocity(-1*npc.body.velocity.x, -1*npc.body.velocity.y).setBounce(1,1);
-                
-                //console.log(npc.getFrame());
-                npc.destroy();
-                //this.addNPC('npc_atlas', 'player1', true, this.AVATAR_SCALE);
-            }
-            
         }, this);
 
         this.npcMonsterGroup.getChildren().forEach(function(npc){
-            if(npc.body.velocity.x < 0) {
-                npc.flipX = true;
-            } else {
-                npc.flipX = false;
+            if(!seekerWin && !hiderWin){
+                if(npc.body.velocity.x < 0) {
+                    npc.flipX = true;
+                } else {
+                    npc.flipX = false;
+                }
+                npc.anims.play('idle', true);
+                npc.body.collideWorldBounds = true;
+                if(Phaser.Geom.Triangle.Contains(this.triangle, npc.x, npc.y)){
+                    npc.destroy();
+                }
             }
-            npc.anims.play('idle', true);
-            npc.body.collideWorldBounds = true;
-            if(Phaser.Geom.Triangle.Contains(this.triangle, npc.x, npc.y)){
-                //console.log(npc.getFrame());
-                npc.destroy();
-                //this.addNPC('monsterNPC', 0, false, this.MONSTER_SCALE);
-            }
-            
         }, this);
 
         if(Phaser.Geom.Triangle.Contains(this.triangle, this.player.x, this.player.y)){
@@ -370,8 +364,6 @@ class Play extends Phaser.Scene{
         // this.physics.world.wrap(this.npcHumanGroup, 0);
         // this.physics.world.wrap(this.npcMonsterGroup, 0);
         this.player.body.collideWorldBounds = true;
-
-        
     }
 
     // function for clicking the hider
@@ -389,9 +381,39 @@ class Play extends Phaser.Scene{
         }
         this.backgroundChatter.stop();
         this.hitSound1.play(hitSoundConfig);
-        this.scene.start('GameOver');
+        
         // set seeker win to true
         seekerWin = true;
+
+        // turn off lighting
+        this.lights.removeLight(light);
+        light = this.lights.addLight(0, 0, 0, this.lightColor);
+        this.lights.enable().setAmbientColor(0xFFFFFF);
+
+        this.npcHumanGroup.getChildren().forEach(function(npc){
+            npc.body.collideWorldBounds = false;
+            npc.setGravityY(250);
+        }, this);
+
+        this.npcMonsterGroup.getChildren().forEach(function(npc){
+            npc.body.collideWorldBounds = false;
+            npc.setGravityY(250);
+        }, this);
+        
+        this.humanPlayerCollider.active = false;
+        this.humanCollider.active = false;
+        this.monsterPlayerCollider.active = false;
+        this.monsterCollider.active = false;
+        this.humanMonsterCollider.active = false;
+        this.obstacle1MonsterCollider.active = false;
+        this.obstacle2HumanCollider.active = false;
+        this.obstacle2MonsterCollider.active = false;
+        this.obstacle1PlayerCollider.active = false;
+        this.obstacle2PlayerCollider.active = false;
+
+        this.time.removeEvent(this.clock);
+        // after 5 seconds, show game over screen
+        let timer = this.time.delayedCall(5000, () => {this.scene.start('GameOver')}, null, this);
     }
 
     // function for clicking other than the hider
