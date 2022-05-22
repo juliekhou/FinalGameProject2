@@ -71,7 +71,7 @@ class Spawn extends Phaser.Scene {
                 this.player.setPipeline('Light2D');
                 this.lightColor = 0xFFFFFF;
                 this.lights.enable().setAmbientColor(this.lightColor);
-                this.light = this.lights.addLight(hiderX, hiderY, 200, 0xFFFFFF);
+                this.light = this.lights.addLight(hiderX, hiderY, 200, 0x000000);
 
                 // display countdown 
                 this.countdown = 5;
