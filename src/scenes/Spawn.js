@@ -74,7 +74,7 @@ class Spawn extends Phaser.Scene {
                 this.light = this.lights.addLight(hiderX, hiderY, 200, 0x000000);
 
                 // display countdown 
-                this.countdown = 3;
+                this.countdown = 5;
                 this.instruction.destroy();
                 let menuConfig = {
                     fontFamily: 'Arial',

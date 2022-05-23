@@ -231,6 +231,7 @@ class Play extends Phaser.Scene{
         });
 
         this.played = false;
+        this.hitPlayed = false;
     }
 
     // function for adding NPC with randomized velocity and start position
@@ -436,7 +437,11 @@ class Play extends Phaser.Scene{
             hitSound = this.hitSound5;
         }
         this.backgroundChatter.stop();
-        hitSound.play(hitSoundConfig);
+        if(!this.hitPlayed){
+            hitSound.play(hitSoundConfig);
+            this.hitPlayed = true;
+        }
+        
         
         // set seeker win to true
         seekerWin = true;
