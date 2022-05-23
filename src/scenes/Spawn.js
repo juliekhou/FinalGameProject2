@@ -45,7 +45,7 @@ class Spawn extends Phaser.Scene {
         //     "As soon as the you click, the game begins", menuConfig).setOrigin(0.5);
 
         this.timer = 0;
-        this.countdown = 5;
+        this.countdown = 3;
         this.clock = this.time.addEvent({delay: 1000, callback: this.counter, callbackScope: this, loop: true});
 
         this.clicked = false; 
@@ -74,7 +74,7 @@ class Spawn extends Phaser.Scene {
                 this.light = this.lights.addLight(hiderX, hiderY, 200, 0x000000);
 
                 // display countdown 
-                this.countdown = 5;
+                this.countdown = 3;
                 this.instruction.destroy();
                 let menuConfig = {
                     fontFamily: 'Arial',

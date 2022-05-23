@@ -1,3 +1,5 @@
+
+
 class Play extends Phaser.Scene{
     constructor(){
         super("Play");
@@ -26,6 +28,44 @@ class Play extends Phaser.Scene{
             delay: 0
         }
         this.backgroundChatter.play(chatterConfig);
+
+        // load hit sounds
+        this.hitSound1 = this.sound.add('hitSound1');
+        this.hitSound2 = this.sound.add('hitSound2');
+        this.hitSound3 = this.sound.add('hitSound3');
+        this.hitSound4 = this.sound.add('hitSound4');
+        this.hitSound5 = this.sound.add('hitSound5');
+
+        hitSoundConfig = {
+            mute: false,
+            volume: 0.25,
+            rate: 1,
+            detune: 0,
+            seek: 0,
+            loop: false,
+            delay: 0
+        }
+        hitSound = this.hitSound1;
+
+        // load miss sounds
+        this.missSound1 = this.sound.add('missSound1');
+        this.missSound2 = this.sound.add('missSound2');
+        this.missSound3 = this.sound.add('missSound3');
+        missSoundConfig = {
+            mute: false,
+            volume: 0.10,
+            rate: 1,
+            detune: 0,
+            seek: 0,
+            loop: false,
+            delay: 0
+        }
+        missSound = this.missSound1;
+
+        // timer so seeker can't click on hider right away
+        this.startTimer = 0;
+        this.startCountdown = 3;
+        this.startClock = this.time.addEvent({delay: 1000, callback: this.counter, callbackScope: this, loop: true});
 
         // from https://phaser.io/examples/v3/view/actions/place-on-triangle
         this.triangle = new Phaser.Geom.Triangle.BuildRight(1300, -10, -490, -610);
@@ -60,8 +100,8 @@ class Play extends Phaser.Scene{
             this.player = this.physics.add.sprite(hiderX, hiderY, 'monsterPlayer').setScale(this.MONSTER_SCALE).setOrigin(0, 0).setInteractive();
         }
         
-        // add hider interactibility 
-        this.player.on('pointerdown', () => {this.clickHider()});
+        // add hider interactibility
+        
         // add lighting to player
         this.player.setPipeline('Light2D');
 
@@ -163,7 +203,9 @@ class Play extends Phaser.Scene{
         // point light that follows cursor
         this.lightRadius = 200;
         this.lightColor = 0xffffff;
-        light = this.lights.addLight(game.config.width/2, game.config.height/2, this.lightRadius, this.lightColor);
+        // begin on the player
+        light = this.lights.addLight(this.player.x, this.player.y, this.lightRadius, this.lightColor);
+
         this.input.on('pointermove', (pointer)=> {
             if(!seekerWin && !hiderWin){
                 light.x = pointer.x;
@@ -254,6 +296,7 @@ class Play extends Phaser.Scene{
     }
 
     update(){
+        
         // display timer and check if it is done
         if(!(this.timer < 0)){
             this.clockRight.setText(this.timer/1000);
@@ -263,18 +306,7 @@ class Play extends Phaser.Scene{
 
             this.backgroundChatter.stop();
             if(!this.played){
-                // load miss sound1
-                this.missSound1 = this.sound.add('missSound1');
-                let missSoundConfig = {
-                    mute: false,
-                    volume: 0.25,
-                    rate: 1,
-                    detune: 0,
-                    seek: 0,
-                    loop: false,
-                    delay: 0
-                }
-                this.missSound1.play(missSoundConfig);
+                missSound.play(missSoundConfig);
                 this.played = true;
             }
         
@@ -377,6 +409,11 @@ class Play extends Phaser.Scene{
             }
         }
 
+        // only if the startCountdown is zero, the seeker can click on the hider
+        if (this.startCountdown == 0){
+            this.player.on('pointerdown', () => {this.clickHider()});
+        }
+
         // make all characters wrap when they hit the edge of the screen
         // this.physics.world.wrap(this.player, 0);
         // this.physics.world.wrap(this.npcHumanGroup, 0);
@@ -386,19 +423,20 @@ class Play extends Phaser.Scene{
 
     // function for clicking the hider
     clickHider(){
-        // load hit sound1
-        this.hitSound1 = this.sound.add('hitSound1');
-        let hitSoundConfig = {
-            mute: false,
-            volume: 0.25,
-            rate: 1,
-            detune: 0,
-            seek: 0,
-            loop: false,
-            delay: 0
+        this.hitSoundChance = Phaser.Math.Between(0,6);
+        if (this.hitSoundChance == 1){
+            hitSound = this.hitSound1;
+        } else if (this.hitSoundChance == 2){
+            hitSound = this.hitSound2;
+        } else if (this.hitSoundChance == 3){
+            hitSound = this.hitSound3;
+        } else if (this.hitSoundChance == 4){
+            hitSound = this.hitSound4;
+        } else {
+            hitSound = this.hitSound5;
         }
         this.backgroundChatter.stop();
-        this.hitSound1.play(hitSoundConfig);
+        hitSound.play(hitSoundConfig);
         
         // set seeker win to true
         seekerWin = true;
@@ -436,23 +474,41 @@ class Play extends Phaser.Scene{
 
     // function for clicking other than the hider
     clickElse(pointer){
-        this.missSound1 = this.sound.add('missSound1');
-        let missSoundConfig = {
-                mute: false,
-                volume: 0.25,
-                rate: 1,
-                detune: 0,
-                seek: 0,
-                loop: false,
-                delay: 0
+        // this.missSound1 = this.sound.add('missSound1');
+        
+        // let missSoundConfig = {
+        //         mute: false,
+        //         volume: 0.25,
+        //         rate: 1,
+        //         detune: 0,
+        //         seek: 0,
+        //         loop: false,
+        //         delay: 0
+        // }
+        // this.soundChance = Math.ceil(Math.random() * 3);
+        this.soundChance = Phaser.Math.Between(0,4);
+        if (this.soundChance == 1){
+            missSound = this.missSound1;
+            // this.missSound1.play(missSoundConfig);
+        } else if (this.soundChance == 2){
+            missSound = this.missSound2;
+            // this.missSound2.play(missSoundConfig);
+        } else {
+            missSound = this.missSound3;
+            // this.missSound3.play(missSoundConfig);
         }
         // before playing sound, check if the pointer is on the hider
         if(!(this.player.getBounds().contains(pointer.x, pointer.y))){
             this.lights.removeLight(light);
             this.lightRadius -= 7;
             light = this.lights.addLight(pointer.x, pointer.y, this.lightRadius, this.lightColor);
-            this.missSound1.play(missSoundConfig);
+            missSound.play(missSoundConfig);
         }
+    }
+
+    counter(){
+        this.startTimer++;
+        this.startCountdown--;
     }
 };
 

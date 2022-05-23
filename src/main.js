@@ -37,3 +37,9 @@ let light;
 let hiderIsHuman;
 // hider spawn point variable declaration
 let hiderX, hiderY;
+// hider miss sound
+let missSound;
+let missSoundConfig;
+// hider hit sound
+let hitSound;
+let hitSoundConfig;

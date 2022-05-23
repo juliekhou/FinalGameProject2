@@ -4,10 +4,20 @@ class Menu extends Phaser.Scene {
     }
 
     preload() {
-        // load audio
+        // load background audio
         this.load.audio('backgroundChatter', './assets/backgroundChatter.m4a');
+
+        // load hit sounds
         this.load.audio('hitSound1', './assets/hitSound1.m4a');
+        this.load.audio('hitSound2', './assets/hitSound2.m4a');
+        this.load.audio('hitSound3', './assets/hitSound3.m4a');
+        this.load.audio('hitSound4', './assets/hitSound4.m4a');
+        this.load.audio('hitSound5', './assets/hitSound5.m4a');
+
+        // load miss sounds
         this.load.audio('missSound1', './assets/missSound1.m4a');
+        this.load.audio('missSound2', './assets/missSound2.m4a');
+        this.load.audio('missSound3', './assets/missSound3.m4a');
 
         // load sprite sheet
         // animations to come in Sprint 2
