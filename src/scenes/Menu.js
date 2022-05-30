@@ -93,7 +93,7 @@ class Menu extends Phaser.Scene {
         // game settings
         game.settings = {
             // gameTimer: 30000    
-            gameTimer: 3000
+            gameTimer: 30000
         }
 
         // change cursor to flashlight
