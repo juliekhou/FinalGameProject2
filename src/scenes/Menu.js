@@ -25,6 +25,14 @@ class Menu extends Phaser.Scene {
         // this.load.spritesheet('tutorial', './assets/tutorial.png', {frameWidth: 500, frameHeight: 110, startFrame: 0, endFrame: 5});
         this.load.image('play', './assets/play.png');
         this.load.image('background', './assets/titleBackground.png');
+        this.load.spritesheet('playAgain', './assets/playAgain.png', {frameWidth: 700, frameHeight: 200, startFrame: 0, endFrame: 13});
+        // load sprite sheets for text
+        this.load.spritesheet('seekerWon', './assets/seekerWon.png', {frameWidth: 570, frameHeight: 370, startFrame: 0, endFrame: 19});
+        this.load.spritesheet('hiderWon', './assets/hiderWon.png', {frameWidth: 570, frameHeight: 400, startFrame: 0, endFrame: 17});
+
+        // load taco sheet
+        this.load.spritesheet('taco', './assets/taco.png', {frameWidth: 780, frameHeight: 475, startFrame: 0, endFrame: 6});
+        this.load.image('flashlight', './assets/flashlight.png');
     }
 
     create() {
@@ -84,7 +92,8 @@ class Menu extends Phaser.Scene {
     update() {
         // game settings
         game.settings = {
-            gameTimer: 30000    
+            // gameTimer: 30000    
+            gameTimer: 3000
         }
 
         // change cursor to flashlight

@@ -12,6 +12,7 @@ class SelectCharacter extends Phaser.Scene {
 
         this.load.spritesheet('humanPlayer', './assets/humanPlayer.png', {frameWidth: 50, frameHeight: 120, startFrame: 0, endFrame: 7});        // load monster spritesheet 
         this.load.spritesheet('monsterPlayer', './assets/monsterPlayer.png', {frameWidth: 150, frameHeight: 190, startFrame: 0, endFrame: 7});
+    
     }
 
     create() {

@@ -4,17 +4,11 @@ class GameOver extends Phaser.Scene {
     }
 
     preload() {
-        // load sprite sheets for text
-        this.load.spritesheet('playAgain', './assets/playAgain.png', {frameWidth: 700, frameHeight: 200, startFrame: 0, endFrame: 13});
-        this.load.spritesheet('seekerWon', './assets/seekerWon.png', {frameWidth: 570, frameHeight: 370, startFrame: 0, endFrame: 19});
-        this.load.spritesheet('hiderWon', './assets/hiderWon.png', {frameWidth: 570, frameHeight: 400, startFrame: 0, endFrame: 17});
-
-        // load taco sheet
-        this.load.spritesheet('taco', './assets/taco.png', {frameWidth: 780, frameHeight: 475, startFrame: 0, endFrame: 6});
-
+        // this.load.spritesheet('humanPlayer', './assets/humanPlayer.png', {frameWidth: 50, frameHeight: 120, startFrame: 0, endFrame: 7});        // load monster spritesheet 
+        // this.load.spritesheet('monsterPlayer', './assets/monsterPlayer.png', {frameWidth: 150, frameHeight: 190, startFrame: 0, endFrame: 7});
         this.load.spritesheet('humanPlayer', './assets/humanPlayer.png', {frameWidth: 50, frameHeight: 120, startFrame: 0, endFrame: 7});        // load monster spritesheet 
         this.load.spritesheet('monsterPlayer', './assets/monsterPlayer.png', {frameWidth: 150, frameHeight: 190, startFrame: 0, endFrame: 7});
-
+    
     }
 
     create() {
@@ -62,26 +56,28 @@ class GameOver extends Phaser.Scene {
             this.scene.start('Menu');
         });
 
-        // determine winner
+    //     // determine winner
         if(seekerWin){
             // seeker won animation
             this.anims.create({
                 key: 'seekerAnim',
                 frames: this.anims.generateFrameNumbers('seekerWon', { start: 0, end: 19, first: 0}),
-                frameRate: 6
+                frameRate: 9
             });
             // this.anims.play('seekerAnim', true);
-            this.seekerWins = this.add.sprite(375, 45, 'seekerWon').setOrigin(0, 0);
+            this.seekerWins = this.add.sprite(375, 45, 'seekerAnim').setOrigin(0, 0);
+
+            this.flashlight = this.add.sprite(920, 125, 'flashlight').setOrigin(0,0);
 
         } else {
             // hider won animation
             this.anims.create({
                 key: 'hiderAnim',
                 frames: this.anims.generateFrameNumbers('hiderWon', { start: 0, end: 17, first: 0}),
-                frameRate: 6
+                frameRate: 9
             });
             // this.anims.play('hiderAnim', true);
-            this.hiderWins = this.add.sprite(375, 45, 'hiderWon').setOrigin(0, 0);
+            this.hiderWins = this.add.sprite(375, 45, 'hiderAnim').setOrigin(0, 0);
 
             if(hiderIsHuman == true){
                 this.human = this.add.sprite(1050, 125, 'humanPlayer').setScale(this.AVATAR_SCALE).setOrigin(0, 0).setInteractive();
@@ -94,13 +90,13 @@ class GameOver extends Phaser.Scene {
 
         this.taco.on('pointerdown', ()=> {
             this.frameNum ++;
-            console.log(this.frameNum);
+            // console.log(this.frameNum);
             if(this.frameNum < 7){
                 // this.taco.destroy();
                 // this.taco = this.physics.add.sprite(200, 250, 'taco').setFrame([this.frameNum]).setOrigin(0,0).setInteractive();
                 this.taco.setFrame([this.frameNum]);
             }
-        })
+        });
     }
 
 
@@ -113,9 +109,9 @@ class GameOver extends Phaser.Scene {
         } else {
             this.hiderWins.anims.play('hiderAnim', true);
             if(hiderIsHuman){
-                this.human = this.human.anims.play('humanWalk', true);
+                this.human.anims.play('humanWalk', true);
             } else{
-                this.monster = this.monster.anims.play('monsterWalk', true);
+                this.monster.anims.play('monsterWalk', true);
             }
         }
     }
