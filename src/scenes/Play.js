@@ -188,8 +188,10 @@ class Play extends Phaser.Scene{
         this.clockRight = this.add.text(0, 50, 0, clockConfig);
         // 30-second play clock
         this.timer = game.settings.gameTimer;
+        this.clock;
         this.clock = this.time.addEvent({delay: 1000, callback: () => {this.timer -= 1000;}, callbackScope: this, loop: true});
 
+        
         // lighting
         // ambient lighting
         this.lights.enable().setAmbientColor(0x161616);
@@ -299,30 +301,34 @@ class Play extends Phaser.Scene{
     update(){
         
         // display timer and check if it is done
-        if(!(this.timer < 0)){
-            this.clockRight.setText(this.timer/1000);
-        } else {
-            // set hider win to true
-            hiderWin = true;
-
-            this.backgroundChatter.stop();
-            if(!this.played){
-                missSound.play(missSoundConfig);
-                this.played = true;
-            }
-        
-            this.npcHumanGroup.getChildren().forEach(function(npc){
-                npc.setVelocity(0,0);
-            }, this);
+        if (this.startCountdown <= 0){
+            if(!(this.timer < 0)){
+                this.clockRight.setText((this.timer/1000));
+            } else {
+                // set hider win to true
+                hiderWin = true;
     
-            this.npcMonsterGroup.getChildren().forEach(function(npc){
-                npc.setVelocity(0,0);
-            }, this);
-
-            light.x = this.player.x;
-            light.y = this.player.y;
-
-            let timer = this.time.delayedCall(5000, () => {this.scene.start('GameOver')}, null, this);
+                this.backgroundChatter.stop();
+                if(!this.played){
+                    missSound.play(missSoundConfig);
+                    this.played = true;
+                }
+            
+                this.npcHumanGroup.getChildren().forEach(function(npc){
+                    npc.setVelocity(0,0);
+                }, this);
+        
+                this.npcMonsterGroup.getChildren().forEach(function(npc){
+                    npc.setVelocity(0,0);
+                }, this);
+    
+                light.x = this.player.x;
+                light.y = this.player.y;
+    
+                let timer = this.time.delayedCall(5000, () => {this.scene.start('GameOver')}, null, this);
+            }
+        } else {
+            this.clockRight.setText("30");
         }
 
         // check keyboard input

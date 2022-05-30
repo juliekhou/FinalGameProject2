@@ -12,32 +12,26 @@ class SelectCharacter extends Phaser.Scene {
 
         this.load.spritesheet('humanPlayer', './assets/humanPlayer.png', {frameWidth: 50, frameHeight: 120, startFrame: 0, endFrame: 7});        // load monster spritesheet 
         this.load.spritesheet('monsterPlayer', './assets/monsterPlayer.png', {frameWidth: 150, frameHeight: 190, startFrame: 0, endFrame: 7});
+        this.load.image('hidersEyesText', "./assets/hidersEyesText.png");
+        this.load.image('pickCharacterText', "./assets/pickCharacterText.png");
     
     }
 
     create() {
         this.AVATAR_SCALE = 3;
         this.MONSTER_SCALE = 1.75;
-        this.human = this.add.sprite(game.config.width/4, game.config.height/3, 'humanPlayer').setScale(this.AVATAR_SCALE).setOrigin(0, 0).setInteractive();
-        this.monster = this.add.sprite(2.5*game.config.width/4, game.config.height/3, 'monsterPlayer').setScale(this.MONSTER_SCALE).setOrigin(0, 0).setInteractive();
+        this.human = this.add.sprite(game.config.width/4, game.config.height/2.5, 'humanPlayer').setScale(this.AVATAR_SCALE).setOrigin(0, 0).setInteractive();
+        this.monster = this.add.sprite(2.5*game.config.width/4, game.config.height/2.5, 'monsterPlayer').setScale(this.MONSTER_SCALE).setOrigin(0, 0).setInteractive();
 
-        // add menu text
-        let menuConfig = {
-            fontFamily: 'Arial',
-            fontSize: '50px',
-            backgroundColor: '#315c2b',
-            color: '#220a07',
-            align: 'center',
-            padding: {
-            top: 5,
-            bottom: 5,
-            },
-            fixedWidth: 0
-        }
-        this.add.text(game.config.width/2, 60, 
-            "Hider's Eyes Only", menuConfig).setOrigin(0.5);
-        this.add.text(game.config.width/2, 120, 
-            "Pick your character!", menuConfig).setOrigin(0.5);
+
+        // text @ middle
+        this.hidersEyes =  this.add.sprite(340, 30, 'hidersEyesText').setScale(.5).setOrigin(0, 0);
+        this.pickCharacter =  this.add.sprite(410, 130, 'pickCharacterText').setScale(.35).setOrigin(0, 0);
+
+        // text @ left
+        // this.hidersEyes =  this.add.sprite(30, 20, 'hidersEyesText').setScale(.5).setOrigin(0, 0);
+        // this.pickCharacter =  this.add.sprite(95, 115, 'pickCharacterText').setScale(.35).setOrigin(0, 0);
+
 
         this.human.on('pointerdown', ()=> {
             hiderIsHuman = true;

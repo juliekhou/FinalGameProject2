@@ -44,7 +44,9 @@ class Menu extends Phaser.Scene {
         
         // tutorial and play buttons
         //this.tutorial = this.physics.add.sprite(390, 450, 'tutorial').setOrigin(0, 0).setInteractive();
-        this.play = this.add.sprite(480, 480, 'play').setOrigin(0, 0).setInteractive();
+        this.play = this.add.sprite(480, 440, 'play').setOrigin(0, 0).setInteractive();
+        this.tutorial = this.add.sprite(480, 640, 'play').setScale(.35).setOrigin(0, 0).setInteractive();
+        this.credits = this.add.sprite(680, 645, 'play').setScale(.35).setOrigin(0, 0).setInteractive();
 
         // for Sprint 2
         // adding animations
@@ -86,6 +88,16 @@ class Menu extends Phaser.Scene {
             this.backgroundChatter.stop();
             this.scene.start('SelectCharacter');
         });
+
+        this.credits.on('pointerdown', ()=> {
+            this.backgroundChatter.stop();
+            this.scene.start('Credits');
+        });
+
+        this.tutorial.on('pointerdown', ()=> {
+            this.backgroundChatter.stop();
+            this.scene.start('Turotial');
+        });
     }
 
 
@@ -93,7 +105,7 @@ class Menu extends Phaser.Scene {
         // game settings
         game.settings = {
             // gameTimer: 30000    
-            gameTimer: 30000
+            gameTimer: 33000
         }
 
         // change cursor to flashlight

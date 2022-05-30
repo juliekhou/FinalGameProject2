@@ -7,7 +7,7 @@ let gameConfig = {
     type: Phaser.WEBGL,
     width: 1280,
     height: 720,
-    scene: [Menu, Tutorial, SelectCharacter, Spawn, Play, GameOver],
+    scene: [Menu, Tutorial, Credits, SelectCharacter, Spawn, Play, GameOver],
     backgroundColor: 0x444444,
 
     // physics settings

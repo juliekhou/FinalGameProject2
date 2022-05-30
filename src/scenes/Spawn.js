@@ -7,6 +7,8 @@ class Spawn extends Phaser.Scene {
     preload() {
         // load background image
         this.load.image('playBackground', "./assets/playBackground.png");
+        this.load.image('chooseSpawnText', "./assets/chooseSpawnText.png");
+        this.load.image('hidersEyesText', "./assets/hidersEyesText.png");
         this.load.image('vampire', './assets/vampire.png');
         this.load.image('dots', './assets/dots.png');
     }
@@ -37,10 +39,11 @@ class Spawn extends Phaser.Scene {
             },
             fixedWidth: 0
         }
-        this.add.text(game.config.width/2, 60, 
-            "Hider's Eyes Only", menuConfig).setOrigin(0.5);
-        this.instruction = this.add.text(game.config.width/2, 120, 
-            "Choose where to hide at the start!", menuConfig).setOrigin(0.5);
+
+        // 240
+
+        this.hidersEyes =  this.add.sprite(30, 20, 'hidersEyesText').setScale(.5).setOrigin(0, 0);
+        this.chooseSpawn =  this.add.sprite(190, 120, 'chooseSpawnText').setScale(.35).setOrigin(0, 0);
         // this.add.text(game.config.width/2, 120, 
         //     "As soon as the you click, the game begins", menuConfig).setOrigin(0.5);
 
@@ -75,7 +78,8 @@ class Spawn extends Phaser.Scene {
 
                 // display countdown 
                 this.countdown = 5;
-                this.instruction.destroy();
+                this.hidersEyes.destroy();
+                this.chooseSpawn.destroy();
                 let menuConfig = {
                     fontFamily: 'Arial',
                     fontSize: '50px',
