@@ -171,25 +171,25 @@ class Play extends Phaser.Scene{
         this.obstacle1PlayerCollider = this.physics.add.collider(this.obstacle1, this.player, ()=> {this.collideObstacle(1)});
         this.obstacle2PlayerCollider = this.physics.add.collider(this.obstacle2, this.player, ()=> {this.collideObstacle(2)});
 
-        // display clock
-        let clockConfig = {
-            fontFamily: 'Courier',
-            fontSize: '28px',
-            backgroundColor: '#A9DEF9',
-            color: '#EDE7B1',
-            align: 'right',
-            padding: {
-            top: 5,
-            bottom: 5,
-            },
-            fixedWidth: 100
-        }
-        // clock
-        this.clockRight = this.add.text(0, 50, 0, clockConfig);
+        // // display clock
+        // let clockConfig = {
+        //     fontFamily: 'Courier',
+        //     fontSize: '28px',
+        //     backgroundColor: '#A9DEF9',
+        //     color: '#EDE7B1',
+        //     align: 'right',
+        //     padding: {
+        //     top: 5,
+        //     bottom: 5,
+        //     },
+        //     fixedWidth: 100
+        // }
+        // // clock
+        // this.clockRight = this.add.text(0, 50, 0, clockConfig);
         // 30-second play clock
         this.timer = game.settings.gameTimer;
         this.clock;
-        this.numbers = this.add.sprite(0, 50, 'numbers').setFrame([0]).setScale(.5).setOrigin(0,0);
+        this.numbers = this.add.sprite(0, 20, 'numbers').setFrame([0]).setScale(.5).setOrigin(0,0);
         this.clock = this.time.addEvent({delay: 1000, callback: () => {
                 this.timer -= 1000; 
                 if(this.timer >= 0 && this.timer < 31000){
@@ -311,7 +311,7 @@ class Play extends Phaser.Scene{
         // display timer and check if it is done
         if (this.startCountdown <= 0){
             if(!(this.timer < 0)){
-                this.clockRight.setText((this.timer/1000));
+                // this.clockRight.setText((this.timer/1000));
             } else {
                 // set hider win to true
                 hiderWin = true;
@@ -336,7 +336,7 @@ class Play extends Phaser.Scene{
                 let timer = this.time.delayedCall(5000, () => {this.scene.start('GameOver')}, null, this);
             }
         } else {
-            this.clockRight.setText("30");
+            // this.clockRight.setText("30");
         }
 
         // check keyboard input

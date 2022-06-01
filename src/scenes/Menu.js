@@ -33,6 +33,7 @@ class Menu extends Phaser.Scene {
         // load taco sheet
         this.load.spritesheet('taco', './assets/taco.png', {frameWidth: 780, frameHeight: 475, startFrame: 0, endFrame: 6});
         this.load.image('flashlight', './assets/flashlight.png');
+        this.load.image('flashlightSprite', './assets/flashlightSprite.png');
     }
 
     create() {

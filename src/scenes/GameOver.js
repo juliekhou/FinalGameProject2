@@ -68,7 +68,7 @@ class GameOver extends Phaser.Scene {
             // this.anims.play('seekerAnim', true);
             this.seekerWins = this.add.sprite(375, 45, 'seekerAnim').setOrigin(0, 0);
 
-            this.flashlight = this.add.sprite(920, 125, 'flashlight').setOrigin(0,0);
+            this.flashlight = this.add.sprite(920, 125, 'flashlightSprite').setOrigin(0,0);
 
         } else {
             // hider won animation
