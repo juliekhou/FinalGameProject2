@@ -25,6 +25,7 @@ class Menu extends Phaser.Scene {
         // this.load.spritesheet('tutorial', './assets/tutorial.png', {frameWidth: 500, frameHeight: 110, startFrame: 0, endFrame: 5});
         this.load.image('play', './assets/play.png');
         this.load.image('tutorialButton', './assets/tutorialButton.png');
+        this.load.image('creditsButton', './assets/creditsButton.png');
         this.load.image('background', './assets/titleBackground.png');
         this.load.spritesheet('playAgain', './assets/playAgain.png', {frameWidth: 700, frameHeight: 200, startFrame: 0, endFrame: 13});
         // load sprite sheets for text
@@ -48,7 +49,7 @@ class Menu extends Phaser.Scene {
         //this.tutorial = this.physics.add.sprite(390, 450, 'tutorial').setOrigin(0, 0).setInteractive();
         this.play = this.add.sprite(480, 440, 'play').setOrigin(0, 0).setInteractive();
         this.tutorial = this.add.sprite(400, 640, 'tutorialButton').setScale(.35).setOrigin(0, 0).setInteractive();
-        this.credits = this.add.sprite(680, 645, 'play').setScale(.35).setOrigin(0, 0).setInteractive();
+        this.credits = this.add.sprite(680, 636, 'creditsButton').setScale(.35).setOrigin(0, 0).setInteractive();
 
         // for Sprint 2
         // adding animations

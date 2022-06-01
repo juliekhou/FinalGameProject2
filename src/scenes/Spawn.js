@@ -11,6 +11,9 @@ class Spawn extends Phaser.Scene {
         this.load.image('hidersEyesText', "./assets/hidersEyesText.png");
         this.load.image('vampire', './assets/vampire.png');
         this.load.image('dots', './assets/dots.png');
+        this.load.image('gameStartsIn', './assets/gameStartsIn.png');
+        this.load.spritesheet('3to0', './assets/3to0.png', {frameWidth: 350, frameHeight: 230, startFrame: 0, endFrame: 4});
+
     }
 
     create() {
@@ -27,20 +30,25 @@ class Spawn extends Phaser.Scene {
         this.triangle = new Phaser.Geom.Triangle.BuildRight(1300, -10, -490, -610);
 
         // add menu text
-        let menuConfig = {
-            fontFamily: 'Arial',
-            fontSize: '50px',
-            backgroundColor: '#315c2b',
-            color: '#220a07',
-            align: 'center',
-            padding: {
-            top: 5,
-            bottom: 5,
-            },
-            fixedWidth: 0
-        }
+        // let menuConfig = {
+        //     fontFamily: 'Arial',
+        //     fontSize: '50px',
+        //     backgroundColor: '#315c2b',
+        //     color: '#220a07',
+        //     align: 'center',
+        //     padding: {
+        //     top: 5,
+        //     bottom: 5,
+        //     },
+        //     fixedWidth: 0
+        // }
 
         // 240
+        this.anims.create({
+            key: '3to0',
+            frames: this.anims.generateFrameNumbers('3to0', { start: 0, end: 4, first: 0}),
+            frameRate: 1
+        });
 
         this.hidersEyes =  this.add.sprite(30, 20, 'hidersEyesText').setScale(.5).setOrigin(0, 0);
         this.chooseSpawn =  this.add.sprite(190, 120, 'chooseSpawnText').setScale(.35).setOrigin(0, 0);
@@ -77,22 +85,25 @@ class Spawn extends Phaser.Scene {
                 this.light = this.lights.addLight(hiderX, hiderY, 200, 0x000000);
 
                 // display countdown 
-                this.countdown = 5;
+                this.countdown = 3;
                 this.hidersEyes.destroy();
                 this.chooseSpawn.destroy();
-                let menuConfig = {
-                    fontFamily: 'Arial',
-                    fontSize: '50px',
-                    backgroundColor: '#315c2b',
-                    color: '#220a07',
-                    align: 'center',
-                    padding: {
-                    top: 5,
-                    bottom: 5,
-                    },
-                    fixedWidth: 0
-                }
-                this.instruction = this.add.text(game.config.width/2, 120, "Game starts in " + this.countdown, menuConfig).setOrigin(0.5);
+                // let menuConfig = {
+                //     fontFamily: 'Arial',
+                //     fontSize: '50px',
+                //     backgroundColor: '#315c2b',
+                //     color: '#220a07',
+                //     align: 'center',
+                //     padding: {
+                //     top: 5,
+                //     bottom: 5,
+                //     },
+                //     fixedWidth: 0
+                // }
+                this.gameStartsIn =  this.add.sprite(390, 50, 'gameStartsIn').setScale(.5).setOrigin(0.5);
+                this.countdownText = this.physics.add.sprite(675, 20, '3to0').setScale(.30).setOrigin(0, 0);
+                this.countdownText.anims.play('3to0', true);
+                // this.instruction = this.add.text(game.config.width/2, 120, "Game starts in " + this.countdown, menuConfig).setOrigin(0.5);
                 this.clicked = true;
             }
         });
@@ -101,19 +112,22 @@ class Spawn extends Phaser.Scene {
 
     update() {
         if(this.clicked){
-            let menuConfig = {
-                fontFamily: 'Arial',
-                fontSize: '50px',
-                backgroundColor: '#315c2b',
-                color: '#220a07',
-                align: 'center',
-                padding: {
-                top: 5,
-                bottom: 5,
-                },
-                fixedWidth: 0
-            }
-            this.instruction = this.add.text(game.config.width/2, 120, "Game starts in " + this.countdown, menuConfig).setOrigin(0.5);
+            // let menuConfig = {
+            //     fontFamily: 'Arial',
+            //     fontSize: '50px',
+            //     backgroundColor: '#315c2b',
+            //     color: '#220a07',
+            //     align: 'center',
+            //     padding: {
+            //     top: 5,
+            //     bottom: 5,
+            //     },
+            //     fixedWidth: 0
+            // }
+            // this.gameStartsIn =  this.add.sprite(390, 50, 'gameStartsIn').setScale(.5).setOrigin(0.5);
+            // this.countdownText = this.physics.add.sprite(500, 50, '3to0').setScale(.5).setOrigin(0, 0);
+            // this.countdownText.anims.play('3to0', true);
+            // this.instruction = this.add.text(game.config.width/2, 120, "Game starts in " + this.countdown, menuConfig).setOrigin(0.5);
         }
         if(this.countdown == 0){
             this.scene.start('Play');
