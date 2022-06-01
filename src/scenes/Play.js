@@ -438,57 +438,59 @@ class Play extends Phaser.Scene{
 
     // function for clicking the hider
     clickHider(){
-        this.hitSoundChance = Phaser.Math.Between(0,6);
-        if (this.hitSoundChance == 1){
-            hitSound = this.hitSound1;
-        } else if (this.hitSoundChance == 2){
-            hitSound = this.hitSound2;
-        } else if (this.hitSoundChance == 3){
-            hitSound = this.hitSound3;
-        } else if (this.hitSoundChance == 4){
-            hitSound = this.hitSound4;
-        } else {
-            hitSound = this.hitSound5;
+        if(!hiderWin){
+            this.hitSoundChance = Phaser.Math.Between(0,6);
+            if (this.hitSoundChance == 1){
+                hitSound = this.hitSound1;
+            } else if (this.hitSoundChance == 2){
+                hitSound = this.hitSound2;
+            } else if (this.hitSoundChance == 3){
+                hitSound = this.hitSound3;
+            } else if (this.hitSoundChance == 4){
+                hitSound = this.hitSound4;
+            } else {
+                hitSound = this.hitSound5;
+            }
+            this.backgroundChatter.stop();
+            if(!this.hitPlayed){
+                hitSound.play(hitSoundConfig);
+                this.hitPlayed = true;
+            }
+            
+            
+            // set seeker win to true
+            seekerWin = true;
+
+            // turn off lighting
+            this.lights.removeLight(light);
+            light = this.lights.addLight(0, 0, 0, this.lightColor);
+            this.lights.enable().setAmbientColor(0xFFFFFF);
+
+            this.npcHumanGroup.getChildren().forEach(function(npc){
+                npc.body.collideWorldBounds = false;
+                npc.setGravityY(250);
+            }, this);
+
+            this.npcMonsterGroup.getChildren().forEach(function(npc){
+                npc.body.collideWorldBounds = false;
+                npc.setGravityY(250);
+            }, this);
+            
+            this.humanPlayerCollider.active = false;
+            this.humanCollider.active = false;
+            this.monsterPlayerCollider.active = false;
+            this.monsterCollider.active = false;
+            this.humanMonsterCollider.active = false;
+            this.obstacle1MonsterCollider.active = false;
+            this.obstacle2HumanCollider.active = false;
+            this.obstacle2MonsterCollider.active = false;
+            this.obstacle1PlayerCollider.active = false;
+            this.obstacle2PlayerCollider.active = false;
+
+            this.time.removeEvent(this.clock);
+            // after 5 seconds, show game over screen
+            let timer = this.time.delayedCall(5000, () => {this.scene.start('GameOver')}, null, this);
         }
-        this.backgroundChatter.stop();
-        if(!this.hitPlayed){
-            hitSound.play(hitSoundConfig);
-            this.hitPlayed = true;
-        }
-        
-        
-        // set seeker win to true
-        seekerWin = true;
-
-        // turn off lighting
-        this.lights.removeLight(light);
-        light = this.lights.addLight(0, 0, 0, this.lightColor);
-        this.lights.enable().setAmbientColor(0xFFFFFF);
-
-        this.npcHumanGroup.getChildren().forEach(function(npc){
-            npc.body.collideWorldBounds = false;
-            npc.setGravityY(250);
-        }, this);
-
-        this.npcMonsterGroup.getChildren().forEach(function(npc){
-            npc.body.collideWorldBounds = false;
-            npc.setGravityY(250);
-        }, this);
-        
-        this.humanPlayerCollider.active = false;
-        this.humanCollider.active = false;
-        this.monsterPlayerCollider.active = false;
-        this.monsterCollider.active = false;
-        this.humanMonsterCollider.active = false;
-        this.obstacle1MonsterCollider.active = false;
-        this.obstacle2HumanCollider.active = false;
-        this.obstacle2MonsterCollider.active = false;
-        this.obstacle1PlayerCollider.active = false;
-        this.obstacle2PlayerCollider.active = false;
-
-        this.time.removeEvent(this.clock);
-        // after 5 seconds, show game over screen
-        let timer = this.time.delayedCall(5000, () => {this.scene.start('GameOver')}, null, this);
     }
 
     // function for clicking other than the hider
