@@ -6,7 +6,7 @@ class Play extends Phaser.Scene{
     }
 
     preload(){
-        
+        this.load.spritesheet('numbers', './assets/nums.png', {frameWidth: 350, frameHeight: 230, startFrame: 0, endFrame: 30});
     }
 
     create(){
@@ -189,9 +189,17 @@ class Play extends Phaser.Scene{
         // 30-second play clock
         this.timer = game.settings.gameTimer;
         this.clock;
-        this.clock = this.time.addEvent({delay: 1000, callback: () => {this.timer -= 1000;}, callbackScope: this, loop: true});
+        this.numbers = this.add.sprite(0, 50, 'numbers').setFrame([0]).setScale(.5).setOrigin(0,0);
+        this.clock = this.time.addEvent({delay: 1000, callback: () => {
+                this.timer -= 1000; 
+                if(this.timer >= 0 && this.timer < 31000){
+                    this.numbers.setFrame([30 - (this.timer/1000)]);
+                }
+            }, callbackScope: this, loop: true});
 
-        
+        //this.numbers = this.add.sprite(0, 50, 'numbers').setFrame([0]).setScale(.5).setOrigin(0,0);
+
+
         // lighting
         // ambient lighting
         this.lights.enable().setAmbientColor(0x161616);

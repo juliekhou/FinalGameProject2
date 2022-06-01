@@ -96,7 +96,7 @@ class Menu extends Phaser.Scene {
 
         this.tutorial.on('pointerdown', ()=> {
             this.backgroundChatter.stop();
-            this.scene.start('Turotial');
+            this.scene.start('Tutorial');
         });
     }
 

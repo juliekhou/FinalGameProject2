@@ -41,11 +41,12 @@ class GameOver extends Phaser.Scene {
             frameRate: 6
         });
 
-        this.anims.create({
-            key: 'tacoAnimation',
-            frames: this.anims.generateFrameNumbers('taco', { start: 0, end: 6, first: 0}),
-            frameRate: 6
-        });
+        // anika - don't think this is needed, further testing required
+        // this.anims.create({
+        //     key: 'tacoAnimation',
+        //     frames: this.anims.generateFrameNumbers('taco', { start: 0, end: 6, first: 0}),
+        //     frameRate: 6
+        // });
 
         this.taco = this.physics.add.sprite(20, 250, 'taco').setFrame([0]).setScale(.5).setOrigin(0,0).setInteractive();
 
@@ -56,7 +57,7 @@ class GameOver extends Phaser.Scene {
             this.scene.start('Menu');
         });
 
-    //     // determine winner
+        // determine winner
         if(seekerWin){
             // seeker won animation
             this.anims.create({
