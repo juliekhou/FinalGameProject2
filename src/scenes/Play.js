@@ -412,17 +412,33 @@ class Play extends Phaser.Scene{
         }, this);
 
         if(Phaser.Geom.Triangle.Contains(this.triangle, this.player.x, this.player.y)){
-            this.player.x = 10;
+            this.player.body.setVelocity(0, 0);
+            if(cursors.left.isDown) {
+                this.player.body.setVelocityX(-this.VELOCITY);
+                this.player.flipX = true;
+                if(hiderIsHuman){
+                    this.player.anims.play('humanWalk', true);
+                } else {
+                    this.player.anims.play('monsterWalk', true);
+                }
+            } else if(cursors.down.isDown) {
+                this.player.body.setVelocityY(this.VELOCITY);
+                if(hiderIsHuman){
+                    this.player.anims.play('humanWalk', true);
+                } else {
+                    this.player.anims.play('monsterWalk', true);
+                }
+            }
         }
 
-        if(this.player.x < 780){
-            if(this.player.y < 10){
-                this.player.y = game.config.height - 10;
-            }
-            if(this.player.y > game.config.height - 9){
-                this.player.y = 10;
-            }
-        }
+        // if(this.player.x < 780){
+        //     if(this.player.y < 10){
+        //         this.player.y = game.config.height - 10;
+        //     }
+        //     if(this.player.y > game.config.height - 9){
+        //         this.player.y = 10;
+        //     }
+        // }
 
         // only if the startCountdown is zero, the seeker can click on the hider
         if (this.startCountdown == 0){
