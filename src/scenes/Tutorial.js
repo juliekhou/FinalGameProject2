@@ -5,6 +5,7 @@ class Tutorial extends Phaser.Scene {
     }
 
     preload() {
+        // load images
         this.load.image('tutorial', './assets/tutorial.png');
         this.load.image('rightArrow', './assets/rightArrow.png');
     }
@@ -13,8 +14,8 @@ class Tutorial extends Phaser.Scene {
         // add background
         this.background = this.add.tileSprite(0, 0, 1280, 960, 'tutorial').setOrigin(0, 0);
 
+        // add arrow and button functionality
         this.arrow = this.add.sprite(1100, 20, 'rightArrow').setScale(0.5).setOrigin(0, 0).setInteractive();
-
         this.arrow.on('pointerdown', ()=> {
             this.scene.start('Menu');
         })

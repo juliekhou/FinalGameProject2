@@ -9,20 +9,4 @@ class NPC extends Phaser.Physics.Arcade.Sprite {
         this.isHuman = isHuman;
         this.scale = scale;
     }
-
-    getTexture(){
-        return this.texture;
-    }
-
-    getFrame(){
-        return this.frame;
-    }
-
-    getIsHuman(){
-        return this.isHuman;
-    }
-
-    getScale(){
-        return this.scale;
-    }
 }

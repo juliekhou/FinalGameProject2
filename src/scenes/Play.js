@@ -1,11 +1,10 @@
-
-
 class Play extends Phaser.Scene{
     constructor(){
         super("Play");
     }
 
     preload(){
+        // load spritesheet
         this.load.spritesheet('numbers', './assets/nums.png', {frameWidth: 350, frameHeight: 230, startFrame: 0, endFrame: 30});
     }
 
@@ -100,8 +99,6 @@ class Play extends Phaser.Scene{
             this.player = this.physics.add.sprite(hiderX, hiderY, 'monsterPlayer').setScale(this.MONSTER_SCALE).setOrigin(0, 0).setInteractive();
         }
         
-        // add hider interactibility
-        
         // add lighting to player
         this.player.setPipeline('Light2D');
 
@@ -138,20 +135,21 @@ class Play extends Phaser.Scene{
             repeat: -1 
         });
 
+        // walk animation for monster NPC
         this.anims.create({
             key: 'idle',
             frames: this.anims.generateFrameNumbers('monsterNPC', { start: 0, end: 7, first: 0}),
             frameRate: 10
         });
 
-        // human walk
+        // walk animation for human player
         this.anims.create({
             key: 'humanWalk',
             frames: this.anims.generateFrameNumbers('humanPlayer', { start: 0, end: 7, first: 0}),
             frameRate: 10
         });
 
-        // monster walk
+        // walk animation for monster player
         this.anims.create({
             key: 'monsterWalk',
             frames: this.anims.generateFrameNumbers('monsterPlayer', { start: 0, end: 7, first: 0}),
@@ -171,25 +169,11 @@ class Play extends Phaser.Scene{
         this.obstacle1PlayerCollider = this.physics.add.collider(this.obstacle1, this.player, ()=> {this.collideObstacle(1)});
         this.obstacle2PlayerCollider = this.physics.add.collider(this.obstacle2, this.player, ()=> {this.collideObstacle(2)});
 
-        // // display clock
-        // let clockConfig = {
-        //     fontFamily: 'Courier',
-        //     fontSize: '28px',
-        //     backgroundColor: '#A9DEF9',
-        //     color: '#EDE7B1',
-        //     align: 'right',
-        //     padding: {
-        //     top: 5,
-        //     bottom: 5,
-        //     },
-        //     fixedWidth: 100
-        // }
-        // // clock
-        // this.clockRight = this.add.text(0, 50, 0, clockConfig);
         // 30-second play clock
         this.timer = game.settings.gameTimer;
-        this.clock;
+        // numbers sprite
         this.numbers = this.add.sprite(0, 20, 'numbers').setFrame([0]).setScale(.5).setOrigin(0,0);
+        // every second, change numbers spritesheet frame to match current time
         this.clock = this.time.addEvent({delay: 1000, callback: () => {
                 this.timer -= 1000; 
                 if(this.timer >= 0 && this.timer < 31000){
@@ -197,41 +181,40 @@ class Play extends Phaser.Scene{
                 }
             }, callbackScope: this, loop: true});
 
-        //this.numbers = this.add.sprite(0, 50, 'numbers').setFrame([0]).setScale(.5).setOrigin(0,0);
-
 
         // lighting
         // ambient lighting
         this.lights.enable().setAmbientColor(0x161616);
-        // this.lights.enable().setAmbientColor(0xFFFFFF);
 
+        // obstacle lighting
         this.obstacleLight1 = this.lights.addLight(120, 250, 200);;
         this.obstacleLight1.visible = false;
         this.obstacleLight2 = this.lights.addLight(920, 500, 120);
         this.obstacleLight2.visible = false;
 
-        // point light that follows cursor
+        // point light that follows cursor (flashlight)
         this.lightRadius = 200;
         this.lightColor = 0xffffff;
         // begin on the player
         light = this.lights.addLight(this.player.x, this.player.y, this.lightRadius, this.lightColor);
 
+        // determine which color flashlight should be depending on how close it is
         this.input.on('pointermove', (pointer)=> {
             if(!seekerWin && !hiderWin){
                 light.x = pointer.x;
                 light.y = pointer.y;
     
-                // Change to red
+                // change to white
                 if(Phaser.Math.Distance.Between(light.x, light.y, this.player.x, this.player.y) < 100){
                     this.lights.removeLight(light);
-                    this.lightColor = 0xFFFFFF; // 0xEEA764
+                    this.lightColor = 0xFFFFFF;
                     light = this.lights.addLight(pointer.x, pointer.y, this.lightRadius, this.lightColor);
-                // Change to yellow
+                // change to yellow
                 } else if(Phaser.Math.Distance.Between(light.x, light.y, this.player.x, this.player.y) < 250){
                     this.lights.removeLight(light);
-                    this.lightColor = 0xF0DD82; //0xF0DD82
+                    this.lightColor = 0xF0DD82;
                     light = this.lights.addLight(pointer.x, pointer.y, this.lightRadius, this.lightColor);
-                // Change back to white
+                // change back to orange
                 } else{
                     this.lights.removeLight(light);
                     this.lightColor = 0xEEA764;
@@ -240,6 +223,7 @@ class Play extends Phaser.Scene{
             }
         });
 
+        // variable to check if sounds were played yet
         this.played = false;
         this.hitPlayed = false;
     }
@@ -250,6 +234,7 @@ class Play extends Phaser.Scene{
         let xPosition = Math.ceil(Math.random() * 1270);
         let yPosition = Math.ceil(Math.random() * 710);
 
+        // check if the random positions are valid - randomize until valid
         let spawnCheck;
         if(this.obstacle1.getBounds().contains(xPosition, yPosition) || this.obstacle2.getBounds().contains(xPosition, yPosition)
                 || Phaser.Geom.Triangle.Contains(this.triangle, xPosition, yPosition)){
@@ -268,13 +253,12 @@ class Play extends Phaser.Scene{
             }
         }
 
-        
         // initialize NPC with lighting
         let npc = new NPC(this, xPosition, yPosition, texture, frame, isHuman, scale).setScale(scale);
         // add lighting to NPC
         npc.setPipeline('Light2D');
 
-        // add NPC to group
+        // add NPC to appropriate group
         if(isHuman) {
             this.npcHumanGroup.add(npc);
         } else {
@@ -296,6 +280,7 @@ class Play extends Phaser.Scene{
         npc.setVelocity(xVelocity, yVelocity).setBounce(1,1);
     }
 
+    // function to light up obstacles when hider collides with them
     collideObstacle(obstacle){
         if(obstacle == 1){
             this.obstacleLight1.visible = true;
@@ -307,21 +292,20 @@ class Play extends Phaser.Scene{
     }
 
     update(){
-        
         // display timer and check if it is done
         if (this.startCountdown <= 0){
-            if(!(this.timer < 0)){
-                // this.clockRight.setText((this.timer/1000));
-            } else {
+            if(this.timer < 0){
                 // set hider win to true
                 hiderWin = true;
     
+                // stop background music and play miss sound
                 this.backgroundChatter.stop();
                 if(!this.played){
                     missSound.play(missSoundConfig);
                     this.played = true;
                 }
             
+                // stop all NPCs
                 this.npcHumanGroup.getChildren().forEach(function(npc){
                     npc.setVelocity(0,0);
                 }, this);
@@ -330,13 +314,13 @@ class Play extends Phaser.Scene{
                     npc.setVelocity(0,0);
                 }, this);
     
+                // have light follow the player
                 light.x = this.player.x;
                 light.y = this.player.y;
     
+                // wait 5 seconds before going to game over screen
                 let timer = this.time.delayedCall(5000, () => {this.scene.start('GameOver')}, null, this);
             }
-        } else {
-            // this.clockRight.setText("30");
         }
 
         // check keyboard input
@@ -389,13 +373,14 @@ class Play extends Phaser.Scene{
                     npc.flipX = false;
                 }
                 npc.anims.play('walk', true);
+                // add collision to world
                 npc.body.collideWorldBounds = true;
+                // if hits side triangle, destroy NPC
                 if(Phaser.Geom.Triangle.Contains(this.triangle, npc.x, npc.y)){
                     npc.destroy();
                 }
             }
         }, this);
-
         this.npcMonsterGroup.getChildren().forEach(function(npc){
             if(!seekerWin && !hiderWin){
                 if(npc.body.velocity.x < 0) {
@@ -404,14 +389,18 @@ class Play extends Phaser.Scene{
                     npc.flipX = false;
                 }
                 npc.anims.play('idle', true);
+                // add collision to world
                 npc.body.collideWorldBounds = true;
+                // if hits side triangle, destroy NPC
                 if(Phaser.Geom.Triangle.Contains(this.triangle, npc.x, npc.y)){
                     npc.destroy();
                 }
             }
         }, this);
 
+        // make collision for player and side triangle
         if(Phaser.Geom.Triangle.Contains(this.triangle, this.player.x, this.player.y)){
+            // player can only move away from triangle
             this.player.body.setVelocity(0, 0);
             if(cursors.left.isDown) {
                 this.player.body.setVelocityX(-this.VELOCITY);
@@ -431,30 +420,20 @@ class Play extends Phaser.Scene{
             }
         }
 
-        // if(this.player.x < 780){
-        //     if(this.player.y < 10){
-        //         this.player.y = game.config.height - 10;
-        //     }
-        //     if(this.player.y > game.config.height - 9){
-        //         this.player.y = 10;
-        //     }
-        // }
-
         // only if the startCountdown is zero, the seeker can click on the hider
         if (this.startCountdown == 0){
             this.player.on('pointerdown', () => {this.clickHider()});
         }
 
-        // make all characters wrap when they hit the edge of the screen
-        // this.physics.world.wrap(this.player, 0);
-        // this.physics.world.wrap(this.npcHumanGroup, 0);
-        // this.physics.world.wrap(this.npcMonsterGroup, 0);
+        // add player collision to world
         this.player.body.collideWorldBounds = true;
     }
 
     // function for clicking the hider
     clickHider(){
+        // check if hider won first
         if(!hiderWin){
+            // randomize hit sound
             this.hitSoundChance = Phaser.Math.Between(0,6);
             if (this.hitSoundChance == 1){
                 hitSound = this.hitSound1;
@@ -467,12 +446,13 @@ class Play extends Phaser.Scene{
             } else {
                 hitSound = this.hitSound5;
             }
+            
+            // stop background music before playing
             this.backgroundChatter.stop();
             if(!this.hitPlayed){
                 hitSound.play(hitSoundConfig);
                 this.hitPlayed = true;
-            }
-            
+            } 
             
             // set seeker win to true
             seekerWin = true;
@@ -482,16 +462,17 @@ class Play extends Phaser.Scene{
             light = this.lights.addLight(0, 0, 0, this.lightColor);
             this.lights.enable().setAmbientColor(0xFFFFFF);
 
+            // set gravity for NPCs
             this.npcHumanGroup.getChildren().forEach(function(npc){
                 npc.body.collideWorldBounds = false;
                 npc.setGravityY(250);
             }, this);
-
             this.npcMonsterGroup.getChildren().forEach(function(npc){
                 npc.body.collideWorldBounds = false;
                 npc.setGravityY(250);
             }, this);
             
+            // turn off all collisions
             this.humanPlayerCollider.active = false;
             this.humanCollider.active = false;
             this.monsterPlayerCollider.active = false;
@@ -503,7 +484,9 @@ class Play extends Phaser.Scene{
             this.obstacle1PlayerCollider.active = false;
             this.obstacle2PlayerCollider.active = false;
 
+            // remove clock event
             this.time.removeEvent(this.clock);
+
             // after 5 seconds, show game over screen
             let timer = this.time.delayedCall(5000, () => {this.scene.start('GameOver')}, null, this);
         }
@@ -511,41 +494,31 @@ class Play extends Phaser.Scene{
 
     // function for clicking other than the hider
     clickElse(pointer){
-        // this.missSound1 = this.sound.add('missSound1');
-        
-        // let missSoundConfig = {
-        //         mute: false,
-        //         volume: 0.25,
-        //         rate: 1,
-        //         detune: 0,
-        //         seek: 0,
-        //         loop: false,
-        //         delay: 0
-        // }
-        // this.soundChance = Math.ceil(Math.random() * 3);
+        // randomize miss sound
         this.soundChance = Phaser.Math.Between(0,4);
         if (this.soundChance == 1){
             missSound = this.missSound1;
-            // this.missSound1.play(missSoundConfig);
         } else if (this.soundChance == 2){
             missSound = this.missSound2;
-            // this.missSound2.play(missSoundConfig);
         } else {
             missSound = this.missSound3;
-            // this.missSound3.play(missSoundConfig);
         }
+
         // before playing sound, check if the pointer is on the hider
         if(!(this.player.getBounds().contains(pointer.x, pointer.y))){
+            // seeker misses, decrease flashlight radius
             this.lights.removeLight(light);
             this.lightRadius -= 7;
             light = this.lights.addLight(pointer.x, pointer.y, this.lightRadius, this.lightColor);
+
+            // play miss sound
             missSound.play(missSoundConfig);
         }
     }
 
+    // function for starting countdown timer
     counter(){
         this.startTimer++;
         this.startCountdown--;
     }
 };
-

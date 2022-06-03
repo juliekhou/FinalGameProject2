@@ -1,5 +1,7 @@
 /**
  * Collaborator Names: Anika Mahajan, Julie Khou, Justin Beedle
+ * Project Name: Fright Night
+ * Date: 06/03/2022
 */
 
 // object containing game configuration options
